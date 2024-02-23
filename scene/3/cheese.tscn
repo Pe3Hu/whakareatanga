@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://4s6ig3h5oy2d"]
+
+[ext_resource type="Script" path="res://scene/3/cheese.gd" id="1_m0n5j"]
+
+[node name="Cheese" type="Polygon2D"]
+script = ExtResource("1_m0n5j")
