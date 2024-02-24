@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cotwofa67w16k"]
+
+[ext_resource type="Script" path="res://scene/3/liaison.gd" id="1_5s1bn"]
+[ext_resource type="PackedScene" uid="uid://ciw38iqel0v5a" path="res://scene/0/icon.tscn" id="2_frluf"]
+
+[node name="Liaison" type="Line2D"]
+width = 2.0
+script = ExtResource("1_5s1bn")
+
+[node name="Index" parent="." instance=ExtResource("2_frluf")]
+visible = false

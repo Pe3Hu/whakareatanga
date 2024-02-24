@@ -1,12 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6xt38h3tpi5k"]
+[gd_scene load_steps=3 format=3 uid="uid://ql5gxkxjfix"]
 
-[ext_resource type="Script" path="res://scene/1/god.gd" id="1_ceqed"]
-[ext_resource type="PackedScene" uid="uid://dwraj1b8ppnti" path="res://scene/3/pizza.tscn" id="2_0f2s2"]
-[ext_resource type="PackedScene" uid="uid://ql5gxkxjfix" path="res://scene/4/cheesemaker.tscn" id="3_txwer"]
+[ext_resource type="Script" path="res://scene/4/cheesemaker.gd" id="1_grn01"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
-[node name="God" type="MarginContainer"]
+[node name="Cheesemaker" type="MarginContainer"]
 custom_minimum_size = Vector2(5, 5)
 anchors_preset = 8
 anchor_left = 0.5
@@ -21,7 +19,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("1_ceqed")
+script = ExtResource("1_grn01")
 
 [node name="BG" type="Panel" parent="."]
 visible = false
@@ -33,8 +31,13 @@ layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Pizza" parent="HBox" instance=ExtResource("2_0f2s2")]
+[node name="Cliches" type="VBoxContainer" parent="HBox"]
 layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
 
-[node name="Cheesemaker" parent="HBox" instance=ExtResource("3_txwer")]
+[node name="Imprints" type="GridContainer" parent="HBox"]
 layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 6

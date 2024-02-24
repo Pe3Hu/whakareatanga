@@ -23,9 +23,43 @@ size_flags_vertical = 4
 script = ExtResource("1_rqtim")
 
 [node name="BG" type="Panel" parent="."]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
+
+[node name="NNE" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="ENE" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="ESE" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="SSE" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="SSW" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="WSW" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="WNW" parent="." instance=ExtResource("2_fuffl")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
 [node name="NNW" parent="." instance=ExtResource("2_fuffl")]
 layout_mode = 2
@@ -33,3 +67,9 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="Slices" type="Node2D" parent="."]
+
+[node name="Cuts" type="Node2D" parent="."]
+
+[node name="Liaisons" type="Node2D" parent="."]
+
+[node name="Knots" type="Node2D" parent="."]

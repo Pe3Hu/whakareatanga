@@ -12,23 +12,20 @@ func set_attributes(input_: Dictionary) -> void:
 	type = input_.type
 	subtype = input_.subtype
 	
-	custom_minimum_size = Vector2(Global.vec.size.letter)
+	custom_minimum_size = Vector2(Global.vec.size.sixteen)
 	var path = "res://asset/png/"
 	var exceptions = ["number"]
 	
 	if !exceptions.has(type):
-		custom_minimum_size = Vector2(Global.vec.size.icon)
+		#custom_minimum_size = Vector2(Global.vec.size.icon)
 		path += type + "/" + subtype + ".png"
 		tr.texture = load(path)
 	
 	match type:
 		"number":
-			custom_minimum_size = Vector2(Global.vec.size.number)
 			tr.visible = false
 			number.visible = true
 			set_number(subtype)
-		"blank":
-			custom_minimum_size = Vector2(Global.vec.size.number)
 
 
 func get_number():

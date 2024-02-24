@@ -67,20 +67,20 @@ func init_angles() -> void:
 		angle.cathets.append(cathet)
 		angles.append(angle)
 	
-	var reflections = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)]
+	var reflections = [Vector2(1, 0), Vector2(0, 1)]
 	var turns = [1, 2, 3]
 	
-	#for angle in angles:
-	var angle = angles.front()
-	cheesemaker.god.pizza.nnw.add_imprint(angle)
-	
-	for turn in turns:
-		var _angle = get_turned_angle(angle, turn)
-		cheesemaker.god.pizza.nnw.add_imprint(_angle)
-	
-	for reflection in reflections:
-		var _angle = get_reflected_angle(angle, reflection)
-		cheesemaker.god.pizza.nnw.add_imprint(_angle)
+	for angle in angles:
+		#var angle = angles.front()
+		cheesemaker.add_imprint(self, angle)
+		
+		for turn in turns:
+			var _angle = get_turned_angle(angle, turn)
+			cheesemaker.add_imprint(self, _angle)
+		
+		for reflection in reflections:
+			var _angle = get_reflected_angle(angle, reflection)
+			cheesemaker.add_imprint(self, _angle)
 	
 
 
@@ -91,13 +91,7 @@ func get_reflected_angle(angle_: Dictionary, reflection_: Vector2) -> Dictionary
 	
 	for _i in angle_.cathets.size():
 		var cathet = Vector2(angle_.cathets[_i])
-	
-		if reflection_.x == 1:
-			cathet.x *= -1
-		
-		if reflection_.y == 1:
-			cathet.y *= -1
-		
+		cathet = cathet.reflect(reflection_)
 		angle.cathets.append(cathet)
 	
 	return angle

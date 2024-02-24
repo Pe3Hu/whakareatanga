@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://ql5gxkxjfix"]
+[gd_scene load_steps=3 format=3 uid="uid://dvf25veypxvp2"]
 
-[ext_resource type="Script" path="res://scene/3/cheesemaker.gd" id="1_grn01"]
+[ext_resource type="Script" path="res://scene/4/cliche.gd" id="1_n1lxo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7paps"]
 
-[node name="Cheesemaker" type="MarginContainer"]
+[node name="Cliche" type="MarginContainer"]
 custom_minimum_size = Vector2(5, 5)
 anchors_preset = 8
 anchor_left = 0.5
@@ -19,14 +19,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("1_grn01")
+script = ExtResource("1_n1lxo")
 
 [node name="BG" type="Panel" parent="."]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7paps")
 
-[node name="Cliches" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 0
-alignment = 1
+[node name="Trigon" type="Polygon2D" parent="."]

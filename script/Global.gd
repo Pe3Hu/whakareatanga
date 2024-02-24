@@ -27,21 +27,36 @@ func init_arr() -> void:
 	arr.aspect = ["strength", "dexterity", "intellect", "will"]
 	arr.essence = ["flesh", "nerve", "blood", "bone"]
 	arr.dimensions = [1, 2, 3]
+	arr.windrose = ["nne", "ene", "ese", "sse", "ssw", "wsw", "wnw", "nnw"]
 
 
 func init_num() -> void:
 	num.index = {}
+	num.index.knot = 0
+	num.index.liaison = 0
 	
 	num.area = {}
 	num.area.col = 5
 	num.area.row = num.area.col
 	
+	num.knot = {}
+	num.knot.r = 4
+	num.knot.quartet = 4
+	
+	num.liaison = {}
+	num.liaison.l = 30
+	
 	num.cliche = {}
-	num.cliche.a = 24
+	num.cliche.a = num.liaison.l * 1
 	
 	num.pizza = {}
-	num.pizza.a = num.cliche.a * 12#int(850/2*0.75)
-	num.pizza.r = num.pizza.a * sqrt(2)
+	num.pizza.n = 3
+	num.pizza.m = num.pizza.n * 2 + 1
+	num.pizza.a = num.liaison.l * (num.pizza.m - 1)#int(850/2*0.75)
+	num.pizza.r = num.pizza.a / sqrt(2)
+	
+	num.crust = {}
+	num.crust.n = 6
 
 
 func init_dict() -> void:
@@ -149,9 +164,13 @@ func init_scene() -> void:
 	scene.area = load("res://scene/2/area.tscn")
 	
 	scene.slice = load("res://scene/3/slice.tscn")
-	scene.cliche = load("res://scene/3/cliche.tscn")
-	scene.imprint = load("res://scene/3/imprint.tscn")
-	scene.cheese = load("res://scene/3/cheese.tscn")
+	scene.cut = load("res://scene/3/cut.tscn")
+	scene.knot = load("res://scene/3/knot.tscn")
+	scene.liaison = load("res://scene/3/liaison.tscn")
+	
+	scene.cliche = load("res://scene/4/cliche.tscn")
+	scene.imprint = load("res://scene/4/imprint.tscn")
+	scene.cheese = load("res://scene/4/cheese.tscn")
 
 
 func init_vec():
@@ -160,7 +179,9 @@ func init_vec():
 	vec.size.sixteen = Vector2(16, 16)
 	
 	vec.size.area = Vector2(96, 96)
-	vec.size.cliche = Vector2.ONE * arr.dimensions.back() * Global.num.cliche.a
+	vec.size.cliche = Vector2.ONE * arr.dimensions.back() * num.cliche.a
+	vec.size.imprint = Vector2.ONE * num.cliche.a
+	vec.size.knot = Vector2.ONE * num.liaison.l
 	
 	init_window_size()
 
@@ -181,7 +202,26 @@ func init_color():
 	color.slice.intellect = Color.from_hsv(210 / h, 0.4, 0.9)
 	color.slice.will = Color.from_hsv(270 / h, 0.4, 0.9)
 	
+	color.cut = {}
+	color.cut.flesh = Color.from_hsv(180 / h, 0.6, 0.9)
+	color.cut.nerve = Color.from_hsv(240 / h, 0.6, 0.9)
+	color.cut.blood = Color.from_hsv(300 / h, 0.6, 0.9)
+	color.cut.bone = Color.from_hsv(90 / h, 0.6, 0.9)
 	
+	color.liaison = {}
+	color.liaison.unavailable = Color.from_hsv(30 / h, 0.6, 0.7)
+	color.liaison.available = Color.from_hsv(210 / h, 0.9, 0.7)
+	color.liaison.incomplete = Color.from_hsv(0 / h,  0.9, 0.7)
+	color.liaison.completed = Color.from_hsv(270 / h, 0.9, 0.7)
+	
+	color.knot = {}
+	color.knot.common = Color.from_hsv(0 / h, 0.0, 0.5)
+	color.knot.uncommon = Color.from_hsv(120 / h, 0.9, 0.9)
+	color.knot.rare = Color.from_hsv(210 / h, 0.9, 0.9)
+	color.knot.mythical = Color.from_hsv(270 / h, 0.9, 0.9)
+	color.knot.ancient = Color.from_hsv(0 / h, 0.9, 0.9)
+	color.knot.legendary = Color.from_hsv(30 / h, 0.9, 0.9)
+	color.knot.immortal = Color.from_hsv(60 / h, 0.9, 0.9)
 
 
 func save(path_: String, data_: String):

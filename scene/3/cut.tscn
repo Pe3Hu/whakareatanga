@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://besblbh13stip"]
+
+[ext_resource type="Script" path="res://scene/3/cut.gd" id="1_x01br"]
+
+[node name="Cut" type="Line2D"]
+width = 4.0
+script = ExtResource("1_x01br")
