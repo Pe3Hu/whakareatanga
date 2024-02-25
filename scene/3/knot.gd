@@ -27,6 +27,13 @@ func init_basic_setting() -> void:
 	if grid != null:
 		position = grid * Global.vec.size.knot
 		proprietor.grids.knot[grid] = self
+		
+		#for axis in Global.arr.axis:
+			#if grid[axis] == 0:
+				#var _grid = Vector2(grid)
+				#_grid[axis] *= -1
+				#proprietor.grids.knot[_grid] = self
+		
 		init_index()
 		set_slices()
 		set_cuts()
@@ -83,15 +90,3 @@ func set_rarity(rarity_: String) -> void:
 func paint_to_match() -> void:
 	color = Global.color.knot[rarity]
 #endregion
-
-
-func get_liaisons_around_socket_perimeter() -> Array:
-	var knots = []
-	
-	for direction in Global.dict.neighbor.diagonal:
-		var _grid = grid + direction
-		var knot = proprietor.grids.knot[_grid]
-		knots.append(knot)
-	
-	var _liaisons = proprietor.get_liaisons_based_on_knots(knots)
-	return _liaisons

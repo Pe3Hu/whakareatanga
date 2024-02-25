@@ -28,6 +28,7 @@ func init_arr() -> void:
 	arr.essence = ["flesh", "nerve", "blood", "bone"]
 	arr.dimensions = [1, 2, 3]
 	arr.windrose = ["nne", "ene", "ese", "sse", "ssw", "wsw", "wnw", "nnw"]
+	arr.axis = ["x", "y"]
 
 
 func init_num() -> void:
@@ -47,7 +48,10 @@ func init_num() -> void:
 	num.liaison.l = 30
 	
 	num.cliche = {}
-	num.cliche.a = num.liaison.l * 1
+	num.cliche.a = num.liaison.l
+	
+	num.imprint = {}
+	num.imprint.a = num.liaison.l# * num.imprint.scale
 	
 	num.pizza = {}
 	num.pizza.n = 3
@@ -180,9 +184,12 @@ func init_vec():
 	
 	vec.size.area = Vector2(96, 96)
 	vec.size.cliche = Vector2.ONE * arr.dimensions.back() * num.cliche.a
-	vec.size.imprint = Vector2.ONE * num.cliche.a
+	#vec.size.imprint = Vector2.ONE * num.imprint.a
 	vec.size.knot = Vector2.ONE * num.liaison.l
 	
+	
+	vec.scale = {}
+	vec.scale.imprint = Vector2.ONE * 0.5
 	init_window_size()
 
 

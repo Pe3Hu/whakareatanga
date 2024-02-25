@@ -112,7 +112,6 @@ func add_imprint(imprint_: MarginContainer) -> void:
 	if windroses.has(windrose):
 		imprints.move_child(blank, imprints.get_child_count() - 1)
 	
-	
 	if !knots_check(imprint_):
 		imprints.remove_child(imprint_)
 		imprint_.queue_free()
@@ -122,20 +121,30 @@ func add_imprint(imprint_: MarginContainer) -> void:
 	#	imprint_.queue_free()
 
 
+
 func knots_check(imprint_: MarginContainer) -> bool:
 	var vertexs = []
 	
-	for vertex in imprint_.vertexs:
-		var grid = vertex - imprint_.vertexs.front()
-		grid += anchor.position
-		grid /= Global.num.liaison.l
-		
-		if !pizza.grids.knot.has(grid):
-			return false
-		else:
-			var knot = pizza.grids.knot[grid]
+	for _grid in imprint_.grids:
+		if _grid != imprint_.grids.front():
+			var grid = _grid - imprint_.grids.front()
+			grid += anchor.grid
 			
-			if !knots.has(knot):
+			for axis in Global.arr.axis:
+				grid[axis] = round(grid[axis])
+			
+			var flag = pizza.grids.knot.keys().has(grid)
+			
+			#if windrose == "wsw":
+			#	print([grid, flag])
+			
+			if !flag:
 				return false
+			else:
+				var knot = pizza.grids.knot[grid]
+				
+				if !knots.has(knot):
+					return false
 	
 	return true
+

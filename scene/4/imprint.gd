@@ -8,26 +8,34 @@ extends MarginContainer
 
 var proprietor = null
 var cliche = null
-var vertexs = null
+var grids = null
 var origin = null
 #endregion
 
 
 #region init
 func set_attributes(input_: Dictionary) -> void:
-	proprietor = input_.proprietor
-	cliche = input_.cliche
-	vertexs = input_.vertexs
-	vertexs = input_.vertexs
+	for key in input_:
+		set(key, input_[key])
 	
 	init_basic_setting()
 
 
 func init_basic_setting() -> void:
-	trigon.set_polygon(vertexs)
+	set_vertexs()
 	align_trigon()
 	init_knot()
 	init_bg()
+
+
+func set_vertexs() -> void:
+	var vertexs = []
+	
+	for grid in grids:
+		var vertex = grid * Global.num.imprint.a
+		vertexs.append(vertex)
+	
+	trigon.set_polygon(vertexs)
 
 
 func init_knot() -> void:
@@ -36,13 +44,15 @@ func init_knot() -> void:
 	input.grid = null
 	
 	knot.set_attributes(input)
-	knot.position = trigon.position + vertexs[0]
+	knot.position = trigon.position + grids[0] * Global.num.imprint.a
 	knot.set_rarity("ancient")
 
 
 func align_trigon() -> void:
 	custom_minimum_size = Vector2(Global.vec.size.cliche)
 	var center = Vector2()
+	#scale = Global.vec.scale.imprint
+	var vertexs = trigon.get_polygon()
 	
 	for vertex in vertexs:
 		center += vertex / vertexs.size()
@@ -72,7 +82,7 @@ func create_replica() -> MarginContainer:
 	input.proprietor = proprietor
 	input.cliche = cliche
 	input.origin = "replica"
-	input.vertexs = vertexs
+	input.grids = grids
 	
 	var imprint = Global.scene.imprint.instantiate()
 	add_child(imprint)

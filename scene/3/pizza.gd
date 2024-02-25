@@ -171,6 +171,12 @@ func init_crusts() -> void:
 		input.cut = cuts.get_child(index)
 		crust.set_attributes(input)
 		crusts.append(crust)
+	
+	#var crust = get("wsw")
+	#
+	#for knot in crust.knots:
+		#knot.set_rarity("mythical")
+		#print(knot.grid)
 
 
 func check_for_knot_inside_slice(knot_: Polygon2D, slice_: Polygon2D) -> bool:

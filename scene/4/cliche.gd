@@ -8,6 +8,7 @@ extends MarginContainer
 var cheesemaker = null
 var dimensions = null
 var angles = []
+var grids = []
 #endregion
 
 
@@ -29,12 +30,17 @@ func init_basic_setting() -> void:
 
 func set_vertexs() -> void:
 	var vertexs = []
-	var vertex = Vector2()
-	vertexs.append(Vector2(vertex))
-	vertex = Vector2(dimensions.x, 0) * Global.num.cliche.a
-	vertexs.append(Vector2(vertex))
-	vertex = Vector2(0, dimensions.y) * Global.num.cliche.a
-	vertexs.append(Vector2(vertex))
+	var grid = Vector2()
+	
+	grids.append(grid)
+	grid = Vector2(dimensions.x, 0)
+	grids.append(grid)
+	grid = Vector2(0, dimensions.y)
+	grids.append(grid)
+	
+	for _grid in grids:
+		var vertex = _grid * Global.num.cliche.a
+		vertexs.append(vertexs)
 	
 	trigon.set_polygon(vertexs)
 
@@ -53,17 +59,17 @@ func align_trigon() -> void:
 
 func init_angles() -> void:
 	var vertexs = trigon.get_polygon()
-	var n = vertexs.size()
+	var n = grids.size()
 	
 	for _i in n:
 		var angle = {}
-		angle.point = vertexs[_i]
+		angle.point = grids[_i]
 		angle.cathets = [] 
 		var index = (_i + 1) % n
-		var cathet = vertexs[index] - angle.point
+		var cathet = grids[index] - angle.point
 		angle.cathets.append(cathet)
 		index = (_i + 2) % n
-		cathet = vertexs[index] - angle.point
+		cathet = grids[index] - angle.point
 		angle.cathets.append(cathet)
 		angles.append(angle)
 	
@@ -81,7 +87,12 @@ func init_angles() -> void:
 		for reflection in reflections:
 			var _angle = get_reflected_angle(angle, reflection)
 			cheesemaker.add_imprint(self, _angle)
-	
+		
+		var rotated_angle = get_turned_angle(angle, 1)
+		
+		for reflection in reflections:
+			var _angle = get_reflected_angle(rotated_angle, reflection)
+			cheesemaker.add_imprint(self, _angle)
 
 
 func get_reflected_angle(angle_: Dictionary, reflection_: Vector2) -> Dictionary:
