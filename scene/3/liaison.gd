@@ -6,7 +6,7 @@ extends Line2D
 
 var proprietor = null
 var knots = []
-var status = null
+var type = null
 var side = null
 #endregion
 
@@ -15,6 +15,7 @@ var side = null
 func set_attributes(input_: Dictionary) -> void:
 	proprietor = input_.proprietor
 	knots = input_.knots
+	type = input_.type
 	
 	init_basic_setting()
 
@@ -22,7 +23,7 @@ func set_attributes(input_: Dictionary) -> void:
 func init_basic_setting() -> void:
 	init_index()
 	set_vertexs()
-	#advance_status()
+	paint_to_match()
 
 
 func init_index() -> void:
@@ -44,13 +45,8 @@ func set_vertexs() -> void:
 	index.position.y -= index.custom_minimum_size.y * 0.5
 
 
-func advance_status() -> void:
-	status = Global.dict.chain.status[status]
-	paint_to_match()
-
-
 func paint_to_match() -> void:
-	default_color = Global.color.liaison[status]
+	default_color = Global.color.liaison[type]
 #endregion
 
 

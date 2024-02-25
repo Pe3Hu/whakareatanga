@@ -40,7 +40,7 @@ func set_vertexs() -> void:
 	
 	for _grid in grids:
 		var vertex = _grid * Global.num.cliche.a
-		vertexs.append(vertexs)
+		vertexs.append(vertex)
 	
 	trigon.set_polygon(vertexs)
 
@@ -58,7 +58,6 @@ func align_trigon() -> void:
 
 
 func init_angles() -> void:
-	var vertexs = trigon.get_polygon()
 	var n = grids.size()
 	
 	for _i in n:

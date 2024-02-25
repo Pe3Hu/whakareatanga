@@ -11,6 +11,8 @@ var liaisons = {}
 var directions = {}
 var slices = []
 var cuts = []
+var crusts = []
+var anchors = []
 var rarity = null
 #endregion
 
@@ -27,12 +29,6 @@ func init_basic_setting() -> void:
 	if grid != null:
 		position = grid * Global.vec.size.knot
 		proprietor.grids.knot[grid] = self
-		
-		#for axis in Global.arr.axis:
-			#if grid[axis] == 0:
-				#var _grid = Vector2(grid)
-				#_grid[axis] *= -1
-				#proprietor.grids.knot[_grid] = self
 		
 		init_index()
 		set_slices()
@@ -83,6 +79,9 @@ func init_index() -> void:
 
 func set_rarity(rarity_: String) -> void:
 	rarity = rarity_
+	
+	if rarity == "rare" and crusts.size() > 1:
+		rarity = "mythical"
 	
 	paint_to_match()
 

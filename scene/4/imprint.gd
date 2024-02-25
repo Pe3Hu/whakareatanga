@@ -50,25 +50,20 @@ func init_knot() -> void:
 
 func align_trigon() -> void:
 	custom_minimum_size = Vector2(Global.vec.size.cliche)
-	var center = Vector2()
-	#scale = Global.vec.scale.imprint
-	var vertexs = trigon.get_polygon()
+	var dimensions = {}
+	dimensions.leftop = Vector2(grids.front())
+	dimensions.rightbot = Vector2(grids.front())
 	
-	for vertex in vertexs:
-		center += vertex / vertexs.size()
+	for grid in grids:
+		dimensions.leftop.x = min(dimensions.leftop.x, grid.x)
+		dimensions.leftop.y = min(dimensions.leftop.y, grid.y)
+		dimensions.rightbot.x = max(dimensions.rightbot.x, grid.x)
+		dimensions.rightbot.y = max(dimensions.rightbot.y, grid.y)
 	
-	trigon.position = Global.vec.size.cliche / 2 - center
-	#match origin:
-		#"original":
-			#custom_minimum_size = Vector2(Global.vec.size.cliche)
-			#var center = Vector2()
-			#
-			#for vertex in vertexs:
-				#center += vertex / vertexs.size()
-			#
-			#trigon.position = Global.vec.size.cliche / 2 - center
-		#"replica":
-			#custom_minimum_size = cliche.dimensions * Global.num.cliche.a
+	dimensions.size = dimensions.rightbot - dimensions.leftop
+	dimensions.center =  dimensions.size / 2
+	dimensions.shift = dimensions.leftop + dimensions.center - grids.front()
+	trigon.position = Global.vec.size.cliche / 2 - dimensions.shift * Global.num.cliche.a
 
 
 func init_bg() -> void:
@@ -77,9 +72,9 @@ func init_bg() -> void:
 	bg.set("theme_override_styles/panel", style)
 
 
-func create_replica() -> MarginContainer:
+func create_replica(crust_: MarginContainer) -> MarginContainer:
 	var input = {}
-	input.proprietor = proprietor
+	input.proprietor = crust_
 	input.cliche = cliche
 	input.origin = "replica"
 	input.grids = grids
@@ -89,4 +84,34 @@ func create_replica() -> MarginContainer:
 	imprint.set_attributes(input)
 	remove_child(imprint)
 	return imprint
+
+
+func get_cathets() -> Array:
+	var cathets = []
+	var n = grids.size()
+	
+	for _i in range(1, n - 1, 1):
+		var index = _i 
+		var cathet = grids[index] - grids[0]
+		
+		for axis in Global.arr.axis:
+			cathet[axis] = round(cathet[axis])
+			
+			if abs(cathet[axis]) == 0:
+				cathet[axis] = 0
+		
+		cathets.append(cathet)
+		index = _i + 1
+		cathet = grids[index] - grids[0]
+		
+		for axis in Global.arr.axis:
+			cathet[axis] = round(cathet[axis])
+			
+			if abs(cathet[axis]) == 0:
+				cathet[axis] = 0
+		
+		cathets.append(cathet)
+	
+	cathets.sort_custom(func(a, b): return a.y * Global.num.pizza.m + a.x < b.y * Global.num.pizza.m + b.x)
+	return cathets
 #endregion

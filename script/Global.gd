@@ -216,10 +216,9 @@ func init_color():
 	color.cut.bone = Color.from_hsv(90 / h, 0.6, 0.9)
 	
 	color.liaison = {}
-	color.liaison.unavailable = Color.from_hsv(30 / h, 0.6, 0.7)
-	color.liaison.available = Color.from_hsv(210 / h, 0.9, 0.7)
-	color.liaison.incomplete = Color.from_hsv(0 / h,  0.9, 0.7)
-	color.liaison.completed = Color.from_hsv(270 / h, 0.9, 0.7)
+	color.liaison.edge = Color.from_hsv(0 / h, 0.0, 0.5)
+	color.liaison.center = Color.from_hsv(0 / h, 0.0, 0.1)
+	color.liaison.axis = Color.from_hsv(0 / h, 0.0, 0.9)
 	
 	color.knot = {}
 	color.knot.common = Color.from_hsv(0 / h, 0.0, 0.5)
@@ -241,7 +240,7 @@ func load_data(path_: String):
 	var file = FileAccess.open(path_, FileAccess.READ)
 	var text = file.get_as_text()
 	var json_object = JSON.new()
-	var parse_err = json_object.parse(text)
+	var _parse_err = json_object.parse(text)
 	return json_object.get_data()
 
 

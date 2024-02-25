@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 @onready var number = $Number
-@onready var tr = $TextureRect
+@onready var textureRect = $TextureRect
 
 var type = null
 var subtype = null
@@ -19,11 +19,11 @@ func set_attributes(input_: Dictionary) -> void:
 	if !exceptions.has(type):
 		#custom_minimum_size = Vector2(Global.vec.size.icon)
 		path += type + "/" + subtype + ".png"
-		tr.texture = load(path)
+		textureRect.texture = load(path)
 	
 	match type:
 		"number":
-			tr.visible = false
+			textureRect.visible = false
 			number.visible = true
 			set_number(subtype)
 

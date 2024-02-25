@@ -10,6 +10,7 @@ var windrose = null
 var slice = null
 var cut = null
 var knots = []
+var liaisons = {}
 var anchor = null
 #endregion
 
@@ -24,7 +25,8 @@ func set_attributes(input_: Dictionary) -> void:
 
 func init_basic_setting() -> void:
 	init_knots()
-	init_blank()
+	init_liaisons()
+	blank.custom_minimum_size = Vector2(Global.vec.size.cliche)
 
 
 func init_knots() -> void:
@@ -39,9 +41,19 @@ func init_knots() -> void:
 		
 		if pizza.check_for_point_inside_triangle(point, triangle):
 			knots.append(knot)
+			knot.crusts.append(self)
+
+
+func init_liaisons() -> void:
+	for knot in knots:
+		for liaison in knot.liaisons:
+			var _knot = liaison.get_another_knot(knot)
 			
-			#if windrose == "nnw":
-			#	knot.set_rarity("rare")
+			if knots.has(_knot):
+				liaisons[liaison] = 4
+				
+				if liaison.type != "center":
+					liaisons[liaison] = 2
 	
 	order_knots()
 
@@ -89,41 +101,76 @@ func order_knots() -> void:
 
 
 func update_anchor() -> void:
+	if liaisons.keys().is_empty():
+		anchor = null
+		return
+	
 	if anchor != null:
-		anchor.set_rarity("rare")
-	else:
-		for knot in knots:
-			if knot.rarity == "uncommon" or knot.rarity == "ancient":
-				anchor = knot
-				break
+		anchor.anchors.erase(self)
+		
+		if anchor.anchors.is_empty():
+			anchor.set_rarity("rare")
+		
+		for liaison in anchor.liaisons:
+			if liaisons.has(liaison):
+				anchor.set_rarity("uncommon")
+				var another = liaison.get_another_knot(anchor)
+				#print([liaisons[liaison], anchor.grid, another.grid])
+	
+	for knot in knots:
+		if check_anchor_knot(knot):
+			#print(knot.grid)
+			anchor = knot
+			break
 	
 	anchor.set_rarity("ancient")
+	anchor.anchors.append(self)
 
 
-func init_blank() -> void:
-	blank.custom_minimum_size = Vector2(Global.vec.size.cliche)
+func check_anchor_knot(knot_: Polygon2D) -> bool:
+	var rarities = ["uncommon", "mythical", "ancient"]
+	
+	if rarities.has(knot_.rarity):
+		for liaison in knot_.liaisons:
+			if liaisons.has(liaison):
+				return true
+	
+	return false
+
+
+func reset() -> void:
+	for _i in range(imprints.get_child_count()-1, -1, -1):
+		var imprint = imprints.get_child(_i)
+		
+		if imprint != blank:
+			imprints.remove_child(imprint)
+			imprint.queue_free()
 #endregion
 
 
 func add_imprint(imprint_: MarginContainer) -> void:
-	imprints.add_child(imprint_)
-	var windroses = ["nne", "sse", "ese", "wsw"]
-	
-	if windroses.has(windrose):
-		imprints.move_child(blank, imprints.get_child_count() - 1)
-	
-	if !knots_check(imprint_):
-		imprints.remove_child(imprint_)
-		imprint_.queue_free()
+	if anchor != null:
+		imprints.add_child(imprint_)
+		var windroses = ["nne", "sse", "ese", "wsw"]
+		
+		if windroses.has(windrose):
+			imprints.move_child(blank, imprints.get_child_count() - 1)
+		
+		if !knots_check(imprint_):
+			imprints.remove_child(imprint_)
+			imprint_.queue_free()
 	
 	#if imprints.get_child_count() > 2:
 	#	imprints.remove_child(imprint_)
 	#	imprint_.queue_free()
 
 
-
 func knots_check(imprint_: MarginContainer) -> bool:
-	var vertexs = []
+	var rarities = ["common", "uncommon", "mythical", "ancient"]
+	var counts = {}
+	
+	for rarity in rarities:
+		counts[rarity] = 0
 	
 	for _grid in imprint_.grids:
 		if _grid != imprint_.grids.front():
@@ -133,18 +180,37 @@ func knots_check(imprint_: MarginContainer) -> bool:
 			for axis in Global.arr.axis:
 				grid[axis] = round(grid[axis])
 			
-			var flag = pizza.grids.knot.keys().has(grid)
-			
-			#if windrose == "wsw":
-			#	print([grid, flag])
-			
-			if !flag:
+			if !pizza.grids.knot.has(grid):
 				return false
 			else:
 				var knot = pizza.grids.knot[grid]
 				
 				if !knots.has(knot):
 					return false
+				else:
+					
+					if !rarities.has(knot.rarity):
+						return false 
+					else:
+						counts[knot.rarity] += 1
+	
+	if counts["uncommon"] + counts["mythical"] == 0:
+		return false
+	
+	if counts["common"] + counts["uncommon"] + counts["mythical"] < 2:
+		return false
 	
 	return true
 
+
+func pop_all_imprints() -> Array:
+	var result = []
+	
+	for _i in range(imprints.get_child_count() - 1, -1, -1):
+		var imprint = imprints.get_child(_i)
+		
+		if imprint != blank:
+			result.append(imprint)
+			imprints.remove_child(imprint)
+	
+	return result

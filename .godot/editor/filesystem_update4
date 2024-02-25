@@ -8,3 +8,10 @@ res://scene/3/knot.gd
 res://scene/4/cliche.gd
 res://scene/4/imprint.gd
 res://script/Global.gd
+res://scene/0/icon.gd
+res://scene/0/game.gd
+res://scene/4/cheese.tscn
+res://scene/4/cheese.gd
+res://scene/3/pizza.gd
+res://scene/1/god.gd
+res://scene/3/liaison.gd

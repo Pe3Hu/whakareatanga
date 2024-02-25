@@ -15,14 +15,15 @@ func _ready() -> void:
 func _input(event) -> void:
 	if event is InputEventKey:
 		match event.keycode:
-			KEY_SPACE:
+			KEY_1:
 				if event.is_pressed() && !event.is_echo():
-					pass
-
-
-func _process(delta_) -> void:
-	$FPS.text = str(Engine.get_frames_per_second())
-
-
-
-
+					var god = sketch.cradle.pantheons.get_child(0).gods.get_child(0)
+					god.cheesemaker.add_cliche()
+			KEY_2:
+				if event.is_pressed() && !event.is_echo():
+					var god = sketch.cradle.pantheons.get_child(0).gods.get_child(0)
+					god.pizza.make_cheese("nnw")
+			KEY_3:
+				if event.is_pressed() && !event.is_echo():
+					var god = sketch.cradle.pantheons.get_child(0).gods.get_child(0)
+					god.pizza.make_cheese("nne")

@@ -5,6 +5,7 @@ extends MarginContainer
 @onready var bg = $BG
 @onready var slices = $Slices
 @onready var cuts = $Cuts
+@onready var cheeses = $Cheeses
 @onready var liaisons = $Liaisons
 @onready var knots = $Knots
 @onready var nne = $NNE
@@ -99,6 +100,7 @@ func init_cuts() -> void:
 func init_knots() -> void:
 	grids.knot = {}
 	knots.position = Global.vec.size.cliche
+	cheeses.position = Global.vec.size.cliche
 	
 	for _i in Global.num.pizza.m:
 		for _j in Global.num.pizza.m:
@@ -138,6 +140,28 @@ func add_liaison(first_: Polygon2D, second_: Polygon2D, direction_: Vector2) -> 
 	var input = {}
 	input.proprietor = self
 	input.knots = [first_, second_]
+	input.type = "center"
+	var flags = {}
+	flags.edge = true
+	flags.axis = true
+	
+	for knot in input.knots:
+		var flag = false
+		
+		for axis in Global.arr.axis:
+			flag = flag or knot.grid[axis] == Global.num.pizza.m - 1 or knot.grid[axis] == 0
+		
+		flags.edge = flags.edge and flag
+		flag = false
+		
+		for axis in Global.arr.axis:
+			flag = flag or knot.grid[axis] == Global.num.pizza.m / 2
+		
+		flags.axis = flags.axis and flag
+	
+	for type in flags:
+		if flags[type]:
+			input.type = type
 	
 	var liaison = Global.scene.liaison.instantiate()
 	liaisons.add_child(liaison)
@@ -210,7 +234,6 @@ func check_for_point_inside_triangle(point_: Vector2, triangle_: Array) -> bool:
 			break
 	
 	var inside = sign(flags.b) == sign(flags.c) and sign(flags.c) == sign(flags.d) #and sign(flags.c) == sign(flags.d)
-	#print([inside, edge])
 	return edge or inside
 
 
@@ -245,3 +268,61 @@ func set_bg_color(color_: Color) -> void:
 	var style = bg.get("theme_override_styles/panel")
 	style.bg_color = color_
 #endregion
+
+
+func weigh_all_crusts() -> void:
+	for crust in crusts:
+		var datas = []
+		
+		var imprints = crust.pop_all_imprints()
+		
+		for imprint in imprints:
+			var data = {}
+			data.imprint = imprint
+			data.weigh = 0
+			
+			for grid in imprint.grids:
+				var _grid = crust.anchor.grid + grid
+				
+				for axis in Global.arr.axis:
+					_grid[axis] = round(_grid[axis])
+				
+				var knot = grids.knot[_grid]
+				var weigh = crust.knots.find(knot)
+				data.weigh += weigh
+			
+			datas.append(data)
+	
+		datas.sort_custom(func(a, b): return a.weigh < b.weigh)
+		
+		for data in datas:
+			crust.add_imprint(data.imprint)
+
+
+func make_cheese(windrose_: String) -> void:
+	var crust = get(windrose_)
+	var imprint = crust.imprints.get_child(1)
+	var windroses = ["nne", "sse", "ese", "wsw"]
+	
+	if windroses.has(windrose_):
+		imprint = crust.imprints.get_child(0)
+	
+	add_cheese(imprint)
+	crust.update_anchor()
+	reset_crusts()
+	god.cheesemaker.recycle_cliche(imprint.cliche)
+
+
+func add_cheese(imprint_: MarginContainer) -> void:
+	var input = {}
+	input.pizza = self
+	input.imprint = imprint_
+	
+	var cheese = Global.scene.cheese.instantiate()
+	cheeses.add_child(cheese)
+	cheese.set_attributes(input)
+
+
+func reset_crusts() -> void:
+	for crust in crusts:
+		crust.reset()
