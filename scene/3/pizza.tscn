@@ -68,10 +68,12 @@ size_flags_vertical = 0
 
 [node name="Slices" type="Node2D" parent="."]
 
-[node name="Cuts" type="Node2D" parent="."]
-
 [node name="Cheeses" type="Node2D" parent="."]
 
 [node name="Liaisons" type="Node2D" parent="."]
+
+[node name="Frontiers" type="Node2D" parent="."]
+
+[node name="Cuts" type="Node2D" parent="."]
 
 [node name="Knots" type="Node2D" parent="."]

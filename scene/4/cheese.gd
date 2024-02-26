@@ -3,6 +3,7 @@ extends Polygon2D
 
 #region var
 var pizza = null
+var imprint = null
 var crust = null
 var knots = {}
 var liaisons = []
@@ -14,29 +15,33 @@ var base = null
 #region init
 func set_attributes(input_: Dictionary) -> void:
 	pizza = input_.pizza
-	crust = input_.imprint.proprietor
+	imprint = input_.imprint
 	
-	init_basic_setting(input_)
+	init_basic_setting()
 
 
-func init_basic_setting(input_: Dictionary) -> void:
-	var dimensions = input_.imprint.cliche.dimensions
+func init_basic_setting() -> void:
+	crust = imprint.proprietor
+	var dimensions = imprint.cliche.dimensions
 	mass = dimensions.x * dimensions.y
-	set_outside_knots(input_.imprint)
+	set_outside_knots()
 	set_base()
 	set_vertexs()
 	set_inside_knots()
 	update_crust_liaisons()
-	accept_defect(input_.imprint)
+	update_defect_status()
+	accept_defect()
+	update_crust_frontier()
+	update_inside_knots()
 
 
-func set_outside_knots(imprint_: MarginContainer) -> void:
+func set_outside_knots() -> void:
 	knots.total = []
 	knots.outside = []
 	knots.inside = []
-	var anchor = imprint_.proprietor.anchor
+	var anchor = imprint.proprietor.anchor
 	
-	for grid in imprint_.grids:
+	for grid in imprint.grids:
 		var _grid = anchor.grid + grid
 		
 		for axis in Global.arr.axis:
@@ -106,15 +111,16 @@ func set_inside_knots() -> void:
 					knots.total.append(knot)
 					#crust.knots[knot] -= 1
 					knot.set_rarity("mythical")
-					
-					var charges = 0
-					
-					for liaison in knot.liaisons:
-						if crust.liaisons.has(liaison):
-							charges +=  crust.liaisons[liaison]
-					
-					if charges < 3:
-						knot.set_rarity("rare")
+					#
+					#var charges = 0
+					#
+					#for liaison in knot.liaisons:
+						#if crust.liaisons.has(liaison):
+							#charges += crust.liaisons[liaison]
+					#
+					#print([Global.num.index.cliche, knot.grid, charges])
+					#if charges < 3:
+						#knot.set_rarity("rare")
 
 
 func update_crust_liaisons() -> void:
@@ -133,9 +139,9 @@ func update_crust_liaisons() -> void:
 		crust.update_anchor()
 
 
-func accept_defect(imprint_: MarginContainer) -> void:
-	print(imprint_.integrity)#, imprint_.integrity)
-	if imprint_.integrity != "perfect":
+func accept_defect() -> void:
+	print(imprint.integrity)#, imprint.integrity)
+	if imprint.integrity != "perfect":
 		var triangle = []
 		var base_mirror = Vector2(base.grid)
 		
@@ -161,6 +167,100 @@ func accept_defect(imprint_: MarginContainer) -> void:
 							liaison.discharge(crust)
 						
 						knot.defects.append(crust)
-					
-					print(knot.grid)
+						#_knot = liaison.get_another_knot(knot)
+						#
+						#if knots.inside.has(_knot):
+							#_knot.set_rarity("rare")
+
+
+func update_defect_status() -> void:
+	var segment = []
+	
+	for knot in crust.frontier.knots:
+		segment.append(knot.position)
+	
+	var counter = 0
+	
+	for knot in knots.outside:
+		var point = knot.position
+	
+		if pizza.check_for_point_inside_segment(point, segment):
+			counter += 1
+	
+	if counter < 2:
+		imprint.integrity = "frontier defect"
+
+
+func update_crust_frontier() -> void:
+	var datas = []
+	
+	for _i in knots.outside.size():
+		var data = {}
+		data.knots = []
+		data.weight = 0
+		var knot = knots.outside[_i]
+		data.knots.append(knot)
+		var _j = (_i + 1) % knots.outside.size()
+		knot = knots.outside[_j]
+		data.knots.append(knot)
+		
+		for _knot in data.knots:
+			var flag = false
+			
+			for liaison in _knot.liaisons:
+				if crust.liaisons.has(liaison):
+					if liaison.charge.get_number() > 0:
+						flag = true
+						break
+			
+			if !flag:
+				data.knots.erase(_knot)
+				break
+			
+			var index = crust.knots.find(_knot)
+			data.weight += index
+		
+		if data.knots.size() == 2:
+			_j = (_i + 2) % knots.outside.size()
+			knot = knots.outside[_j]
+			var grid = Vector2(knot.grid)
+			
+			if base == knot:
+				for _knot in data.knots:
+					var shift = _knot.grid - base.grid
+					grid += shift
+			else:
+				var shift = base.grid - knot.grid
+				grid += shift * 2
+			
+			for axis in Global.arr.axis:
+				grid[axis] = round(grid[axis])
+			
+			if pizza.grids.knot.has(grid):
+				knot = pizza.grids.knot[grid]
+				
+				if knot.rarity != "rare":
+					#print(["#", _i, data.weight, grid, knot.rarity])
+					datas.append(data)
+	
+	if !datas.is_empty():
+		datas.sort_custom(func(a, b): return a.weight < b.weight)
+		crust.frontier.knots = datas.front().knots
+		crust.frontier.set_vertexs()
+	else:
+		pass
+
+
+func update_inside_knots() -> void:
+	for knot in knots.inside:
+		var charges = 0
+		
+		for liaison in knot.liaisons:
+			if crust.liaisons.has(liaison):
+				#liaison.discharge(crust)
+				charges += crust.liaisons[liaison]
+		
+		print([Global.num.index.cliche, knot.grid, charges])
+		if charges < 3:
+			knot.set_rarity("rare")
 #endregion

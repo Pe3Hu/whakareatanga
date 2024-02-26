@@ -22,7 +22,7 @@ func init_basic_setting() -> void:
 	pizza.set_attributes(input)
 	cheesemaker.set_attributes(input)
 	
-	for _i in 3:
+	for _i in 4:
 		cheesemaker.add_cliche()
 		#var windrose = Global.arr.windrose.pick_random()
 		#pizza.make_best_cheese()

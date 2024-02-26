@@ -31,8 +31,12 @@ func init_cliche() -> void:
 	var options = [Vector2(1, 1), Vector2(2, 1), Vector2(1, 2)]
 	var input = {}
 	input.cheesemaker = self
-	var index = Global.arr.dimensions[Global.num.index.cliche]
-	input.dimensions = options[index]#options.pick_random()
+	
+	if Global.arr.sequence.size() > Global.num.index.cliche:
+		var index = Global.arr.sequence[Global.num.index.cliche]
+		input.dimensions = options[index]#options.pick_random()
+	else:
+		input.dimensions = options.pick_random()
 	
 	var cliche = Global.scene.cliche.instantiate()
 	cliches.add_child(cliche)
@@ -85,11 +89,6 @@ func distribute_imprints() -> void:
 		
 		imprints.remove_child(imprint)
 		imprint.queue_free()
-	
-	#print("___")
-	#for crust in god.pizza.crusts:
-		#var _imprints = crust.imprints.get_children()
-		#print([crust.windrose, _imprints.size()])
 
 
 func recycle_cliche(cliche_: MarginContainer) -> void:

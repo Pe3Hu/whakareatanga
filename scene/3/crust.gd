@@ -6,6 +6,7 @@ extends MarginContainer
 @onready var blank = $Imprints/Blank
 
 var pizza = null
+var frontier = null
 var windrose = null
 var slice = null
 var cut = null
@@ -27,6 +28,7 @@ func set_attributes(input_: Dictionary) -> void:
 func init_basic_setting() -> void:
 	init_knots()
 	init_liaisons()
+	init_frontier()
 	blank.custom_minimum_size = Vector2(Global.vec.size.cliche)
 
 
@@ -126,6 +128,15 @@ func update_anchor() -> void:
 	anchor.anchors.append(self)
 
 
+func init_frontier() -> void:
+	var input = {}
+	input.crust = self
+	input.knots = [knots.front(), knots.back()]
+	
+	frontier = Global.scene.frontier.instantiate()
+	pizza.frontiers.add_child(frontier)
+	frontier.set_attributes(input)
+
 func check_knot_rarity(knot_: Polygon2D) -> bool:
 	var rarities = ["uncommon", "mythical", "ancient"]
 	
@@ -142,7 +153,6 @@ func check_knot_neighbors_for_defects(knot_: Polygon2D) -> bool:
 	var charges = 0
 	
 	for knot in knot_.neighbors:
-		
 		if knots.has(knot):
 			var liaison = knot_.neighbors[knot]
 			charges += liaison.charge.get_number()
@@ -231,9 +241,6 @@ func get_imprint_integrity(imprint_: MarginContainer) -> String:
 						return "inappropriate rarity"
 					else:
 						counts[knot.rarity] += 1
-						
-						#if knot.rarity == "uncommon" or knot.rarity == "mythical":
-
 	
 	for _i in imprint_.grids.size():
 		var _knots = {}

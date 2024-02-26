@@ -7,6 +7,7 @@ extends MarginContainer
 @onready var cuts = $Cuts
 @onready var cheeses = $Cheeses
 @onready var liaisons = $Liaisons
+@onready var frontiers = $Frontiers
 @onready var knots = $Knots
 @onready var nne = $NNE
 @onready var ene = $ENE
@@ -51,7 +52,7 @@ func init_cornres() -> void:
 		corners.append(corner)
 	
 	custom_minimum_size = corners[1] - corners[3]
-	custom_minimum_size += Global.vec.size.cliche * 2
+	custom_minimum_size += Vector2(Global.vec.size.cliche) * 2
 	center = custom_minimum_size / 2
 
 
@@ -99,8 +100,8 @@ func init_cuts() -> void:
 
 func init_knots() -> void:
 	grids.knot = {}
-	knots.position = Global.vec.size.cliche
-	cheeses.position = Global.vec.size.cliche
+	knots.position = Vector2(Global.vec.size.cliche)
+	cheeses.position = Vector2(Global.vec.size.cliche)
 	
 	for _i in Global.num.pizza.m:
 		for _j in Global.num.pizza.m:
@@ -123,7 +124,7 @@ func init_knots() -> void:
 
 
 func init_liaisons() -> void:
-	liaisons.position = Global.vec.size.cliche
+	liaisons.position = Vector2(Global.vec.size.cliche)
 	
 	for knot in knots.get_children():
 		for direction in Global.dict.neighbor.linear2:
@@ -178,6 +179,8 @@ func add_liaison(first_: Polygon2D, second_: Polygon2D, direction_: Vector2) -> 
 
 
 func init_crusts() -> void:
+	frontiers.position = Vector2(Global.vec.size.cliche)
+	
 	for _i in Global.arr.windrose.size():
 		var input = {}
 		input.pizza = self

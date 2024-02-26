@@ -29,8 +29,7 @@ func init_arr() -> void:
 	arr.dimensions = [1, 2, 3]
 	arr.windrose = ["nne", "ene", "ese", "sse", "ssw", "wsw", "wnw", "nnw"]
 	arr.axis = ["x", "y"]
-	
-	arr.dimensions = [1,0,1]
+	arr.sequence = [1,0,1,0,0]
 
 
 func init_num() -> void:
@@ -174,6 +173,7 @@ func init_scene() -> void:
 	scene.cut = load("res://scene/3/cut.tscn")
 	scene.knot = load("res://scene/3/knot.tscn")
 	scene.liaison = load("res://scene/3/liaison.tscn")
+	scene.frontier = load("res://scene/3/frontier.tscn")
 	
 	scene.cliche = load("res://scene/4/cliche.tscn")
 	scene.imprint = load("res://scene/4/imprint.tscn")
@@ -189,7 +189,6 @@ func init_vec():
 	vec.size.cliche = Vector2.ONE * arr.dimensions.back() * num.cliche.a
 	#vec.size.imprint = Vector2.ONE * num.imprint.a
 	vec.size.knot = Vector2.ONE * num.liaison.l
-	
 	
 	vec.scale = {}
 	vec.scale.imprint = Vector2.ONE * 0.5
@@ -231,6 +230,12 @@ func init_color():
 	color.knot.ancient = Color.from_hsv(0 / h, 0.9, 0.9)
 	color.knot.legendary = Color.from_hsv(30 / h, 0.9, 0.9)
 	color.knot.immortal = Color.from_hsv(60 / h, 0.9, 0.9)
+	
+	color.frontier = {}
+	color.frontier.strength = Color.from_hsv(0 / h, 0.7, 0.9)
+	color.frontier.dexterity = Color.from_hsv(120 / h, 0.7, 0.9)
+	color.frontier.intellect = Color.from_hsv(210 / h, 0.7, 0.9)
+	color.frontier.will = Color.from_hsv(270 / h, 0.7, 0.9)
 
 
 func save(path_: String, data_: String):

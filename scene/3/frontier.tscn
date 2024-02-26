@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmcjv7tlajs67"]
+
+[ext_resource type="Script" path="res://scene/3/frontier.gd" id="1_b380h"]
+
+[node name="Frontier" type="Line2D"]
+width = 8.0
+script = ExtResource("1_b380h")
