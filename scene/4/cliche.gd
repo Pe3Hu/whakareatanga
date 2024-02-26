@@ -22,6 +22,7 @@ func set_attributes(input_: Dictionary) -> void:
 
 func init_basic_setting() -> void:
 	custom_minimum_size = Vector2(Global.vec.size.cliche)
+	Global.num.index.cliche += 1
 	set_vertexs()
 	align_trigon()
 	init_angles()

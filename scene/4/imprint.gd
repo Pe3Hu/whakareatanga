@@ -10,6 +10,8 @@ var proprietor = null
 var cliche = null
 var grids = null
 var origin = null
+var verification = null
+var integrity = null
 #endregion
 
 
@@ -78,6 +80,7 @@ func create_replica(crust_: MarginContainer) -> MarginContainer:
 	input.cliche = cliche
 	input.origin = "replica"
 	input.grids = grids
+	input.verification = "doubtful"
 	
 	var imprint = Global.scene.imprint.instantiate()
 	add_child(imprint)

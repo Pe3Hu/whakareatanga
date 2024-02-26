@@ -29,12 +29,15 @@ func init_arr() -> void:
 	arr.dimensions = [1, 2, 3]
 	arr.windrose = ["nne", "ene", "ese", "sse", "ssw", "wsw", "wnw", "nnw"]
 	arr.axis = ["x", "y"]
+	
+	arr.dimensions = [1,0,1]
 
 
 func init_num() -> void:
 	num.index = {}
 	num.index.knot = 0
 	num.index.liaison = 0
+	num.index.cliche = 0
 	
 	num.area = {}
 	num.area.col = 5
@@ -54,7 +57,7 @@ func init_num() -> void:
 	num.imprint.a = num.liaison.l# * num.imprint.scale
 	
 	num.pizza = {}
-	num.pizza.n = 3
+	num.pizza.n = 4
 	num.pizza.m = num.pizza.n * 2 + 1
 	num.pizza.a = num.liaison.l * (num.pizza.m - 1)#int(850/2*0.75)
 	num.pizza.r = num.pizza.a / sqrt(2)

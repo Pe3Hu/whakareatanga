@@ -13,6 +13,7 @@ var slices = []
 var cuts = []
 var crusts = []
 var anchors = []
+var defects = []
 var rarity = null
 #endregion
 

@@ -3,9 +3,11 @@ extends Line2D
 
 #region vars
 @onready var index = $Index
+@onready var charge = $Charge
 
 var proprietor = null
 var knots = []
+var crusts = {}
 var type = null
 var side = null
 #endregion
@@ -21,17 +23,20 @@ func set_attributes(input_: Dictionary) -> void:
 
 
 func init_basic_setting() -> void:
-	init_index()
+	init_icons()
 	set_vertexs()
 	paint_to_match()
 
 
-func init_index() -> void:
+func init_icons() -> void:
 	var input = {}
 	input.type = "number"
 	input.subtype = Global.num.index.liaison
 	index.set_attributes(input)
 	Global.num.index.liaison += 1
+	
+	input.subtype = 0
+	charge.set_attributes(input)
 
 
 func set_vertexs() -> void:
@@ -43,6 +48,7 @@ func set_vertexs() -> void:
 	index.position /= knots.size()
 	index.position.x -= index.custom_minimum_size.x * 0.5
 	index.position.y -= index.custom_minimum_size.y * 0.5
+	charge.position = index.position
 
 
 func paint_to_match() -> void:
@@ -85,3 +91,28 @@ func update_side() -> void:
 		if sides[_side] == 2:
 			side = _side
 			proprietor.sides.liaison[side].append(self)
+
+
+func change_charge(value_: int) -> void:
+	charge.change_number(value_)
+
+
+func add_crust(crust_: MarginContainer) -> void:
+	var value = 2
+	
+	if type != "center":
+		value = 1
+	
+	crust_.liaisons[self] = value * 2
+	crusts[self] = value
+	change_charge(value)
+
+
+func discharge(crust_: MarginContainer) -> void:
+	crust_.liaisons[self] -= 1
+	crusts[self] -= 1
+	
+	if crust_.liaisons[self] == 0:
+		crust_.liaisons.erase(self)
+	
+	change_charge(-1)

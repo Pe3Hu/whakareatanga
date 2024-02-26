@@ -11,6 +11,7 @@ var slice = null
 var cut = null
 var knots = []
 var liaisons = {}
+var defects = []
 var anchor = null
 #endregion
 
@@ -50,10 +51,7 @@ func init_liaisons() -> void:
 			var _knot = liaison.get_another_knot(knot)
 			
 			if knots.has(_knot):
-				liaisons[liaison] = 4
-				
-				if liaison.type != "center":
-					liaisons[liaison] = 2
+				liaison.add_crust(self)
 	
 	order_knots()
 
@@ -114,20 +112,21 @@ func update_anchor() -> void:
 		for liaison in anchor.liaisons:
 			if liaisons.has(liaison):
 				anchor.set_rarity("uncommon")
-				var another = liaison.get_another_knot(anchor)
+				#var another = liaison.get_another_knot(anchor)
 				#print([liaisons[liaison], anchor.grid, another.grid])
 	
 	for knot in knots:
-		if check_anchor_knot(knot):
-			#print(knot.grid)
-			anchor = knot
-			break
+		if check_knot_rarity(knot):
+			if check_knot_neighbors_for_defects(knot):
+				#print(knot.grid)
+				anchor = knot
+				break
 	
 	anchor.set_rarity("ancient")
 	anchor.anchors.append(self)
 
 
-func check_anchor_knot(knot_: Polygon2D) -> bool:
+func check_knot_rarity(knot_: Polygon2D) -> bool:
 	var rarities = ["uncommon", "mythical", "ancient"]
 	
 	if rarities.has(knot_.rarity):
@@ -138,6 +137,29 @@ func check_anchor_knot(knot_: Polygon2D) -> bool:
 	return false
 
 
+func check_knot_neighbors_for_defects(knot_: Polygon2D) -> bool:
+	var flag = false
+	var charges = 0
+	
+	for knot in knot_.neighbors:
+		
+		if knots.has(knot):
+			var liaison = knot_.neighbors[knot]
+			charges += liaison.charge.get_number()
+			
+			if knot.defects.has(self):
+				flag = true
+	
+	if !flag:
+		return true
+	
+	if charges == 2:
+		knot_.set_rarity("immortal")
+		return false
+	
+	return true
+
+
 func reset() -> void:
 	for _i in range(imprints.get_child_count()-1, -1, -1):
 		var imprint = imprints.get_child(_i)
@@ -145,6 +167,10 @@ func reset() -> void:
 		if imprint != blank:
 			imprints.remove_child(imprint)
 			imprint.queue_free()
+	
+	while !defects.is_empty():
+		var defect = defects.pop_front()
+		defect.queue_free()
 #endregion
 
 
@@ -156,16 +182,26 @@ func add_imprint(imprint_: MarginContainer) -> void:
 		if windroses.has(windrose):
 			imprints.move_child(blank, imprints.get_child_count() - 1)
 		
-		if !knots_check(imprint_):
-			imprints.remove_child(imprint_)
-			imprint_.queue_free()
-	
-	#if imprints.get_child_count() > 2:
-	#	imprints.remove_child(imprint_)
-	#	imprint_.queue_free()
+		if imprint_.verification != "guaranteed":
+			imprint_.integrity = get_imprint_integrity(imprint_)
+			
+			if imprint_.integrity != "perfect":
+				var words = imprint_.integrity.split(" ")
+				imprints.remove_child(imprint_)
+			
+				if words.has("defect"):
+					defects.append(imprint_)
+			
+			if check_imprint_on_self_repeat(imprint_):
+				imprints.remove_child(imprint_)
+				
+				if defects.has(imprint_):
+					defects.erase(imprint_)
+				
+				imprint_.queue_free()
 
 
-func knots_check(imprint_: MarginContainer) -> bool:
+func get_imprint_integrity(imprint_: MarginContainer) -> String:
 	var rarities = ["common", "uncommon", "mythical", "ancient"]
 	var counts = {}
 	
@@ -181,26 +217,56 @@ func knots_check(imprint_: MarginContainer) -> bool:
 				grid[axis] = round(grid[axis])
 			
 			if !pizza.grids.knot.has(grid):
-				return false
+				return "out of grid"
 			else:
 				var knot = pizza.grids.knot[grid]
 				
+				if knot.defects.has(imprint_.proprietor):
+					return "impossible touch"
+				
 				if !knots.has(knot):
-					return false
+					return "outside allotment"
 				else:
-					
 					if !rarities.has(knot.rarity):
-						return false 
+						return "inappropriate rarity"
 					else:
 						counts[knot.rarity] += 1
+						
+						#if knot.rarity == "uncommon" or knot.rarity == "mythical":
+
+	
+	for _i in imprint_.grids.size():
+		var _knots = {}
+		var grid = imprint_.grids[_i] + anchor.grid - imprint_.grids.front()
+		
+		for axis in Global.arr.axis:
+			grid[axis] = round(grid[axis])
+		
+		_knots.parent = pizza.grids.knot[grid]
+		var _j = (_i + 1) % imprint_.grids.size()
+		grid = imprint_.grids[_j] + anchor.grid - imprint_.grids.front()
+		
+		for axis in Global.arr.axis:
+			grid[axis] = round(grid[axis])
+		
+		_knots.child = pizza.grids.knot[grid]
+		
+		if _knots.parent.neighbors.has(_knots.child):
+			var liaison = _knots.parent.neighbors[_knots.child]
+			
+			if !liaisons.has(liaison):
+				return "discharged liaison"
 	
 	if counts["uncommon"] + counts["mythical"] == 0:
-		return false
+		return "uncommon and mythical defect"
 	
 	if counts["common"] + counts["uncommon"] + counts["mythical"] < 2:
-		return false
+		return "common and uncommon and mythical defect"
 	
-	return true
+	if counts["common"] == 1 and counts["uncommon"] == 0:
+		return "common and uncommon defect"
+	
+	return "perfect"
 
 
 func pop_all_imprints() -> Array:
@@ -213,4 +279,16 @@ func pop_all_imprints() -> Array:
 			result.append(imprint)
 			imprints.remove_child(imprint)
 	
+	if result.is_empty():
+		result.append_array(defects)
+		defects = []
+	
 	return result
+
+
+func check_imprint_on_self_repeat(imprint_: MarginContainer) -> bool:
+	
+	
+	
+	
+	return false

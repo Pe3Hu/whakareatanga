@@ -273,7 +273,6 @@ func set_bg_color(color_: Color) -> void:
 func weigh_all_crusts() -> void:
 	for crust in crusts:
 		var datas = []
-		
 		var imprints = crust.pop_all_imprints()
 		
 		for imprint in imprints:
@@ -292,25 +291,54 @@ func weigh_all_crusts() -> void:
 				data.weigh += weigh
 			
 			datas.append(data)
-	
-		datas.sort_custom(func(a, b): return a.weigh < b.weigh)
 		
-		for data in datas:
-			crust.add_imprint(data.imprint)
+		if !datas.is_empty():
+			datas.sort_custom(func(a, b): return a.weigh < b.weigh)
+			var imprint = datas.front().imprint
+			imprint.verification = "guaranteed"
+			crust.add_imprint(imprint)
+		#for data in datas:
+		#	crust.add_imprint(data.imprint)
 
 
 func make_cheese(windrose_: String) -> void:
 	var crust = get(windrose_)
-	var imprint = crust.imprints.get_child(1)
-	var windroses = ["nne", "sse", "ese", "wsw"]
 	
-	if windroses.has(windrose_):
-		imprint = crust.imprints.get_child(0)
+	if crust.imprints.get_child_count() > 1:
+		var imprint = crust.imprints.get_child(1)
+		var windroses = ["nne", "sse", "ese", "wsw"]
+		
+		if windroses.has(windrose_):
+			imprint = crust.imprints.get_child(0)
+		
+		add_cheese(imprint)
+		crust.update_anchor()
+		reset_crusts()
+		god.cheesemaker.recycle_cliche(imprint.cliche)
+
+
+func make_best_cheese() -> void:
+	var datas = []
 	
-	add_cheese(imprint)
-	crust.update_anchor()
-	reset_crusts()
-	god.cheesemaker.recycle_cliche(imprint.cliche)
+	for crust in crusts:
+		if crust.imprints.get_child_count() > 1:
+			var data = {}
+			data.imprint = crust.imprints.get_child(1)
+			var windroses = ["nne", "sse", "ese", "wsw"]
+			
+			if windroses.has(crust.windrose):
+				data.imprint = crust.imprints.get_child(0)
+			
+			data.weight = 0
+			datas.append(data)
+	
+	if !datas.is_empty():
+		var data = datas.pick_random()
+		var imprint = data.imprint
+		add_cheese(imprint)
+		imprint.proprietor.update_anchor()
+		reset_crusts()
+		god.cheesemaker.recycle_cliche(imprint.cliche)
 
 
 func add_cheese(imprint_: MarginContainer) -> void:

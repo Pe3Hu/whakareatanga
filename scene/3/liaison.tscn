@@ -9,3 +9,5 @@ script = ExtResource("1_5s1bn")
 
 [node name="Index" parent="." instance=ExtResource("2_frluf")]
 visible = false
+
+[node name="Charge" parent="." instance=ExtResource("2_frluf")]

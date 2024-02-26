@@ -27,3 +27,7 @@ func _input(event) -> void:
 				if event.is_pressed() && !event.is_echo():
 					var god = sketch.cradle.pantheons.get_child(0).gods.get_child(0)
 					god.pizza.make_cheese("nne")
+			KEY_SPACE:
+				if event.is_pressed() && !event.is_echo():
+					var god = sketch.cradle.pantheons.get_child(0).gods.get_child(0)
+					god.pizza.make_best_cheese()
